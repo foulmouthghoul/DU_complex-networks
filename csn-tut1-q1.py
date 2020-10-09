@@ -22,6 +22,9 @@ options = {'node_color': 'yellow','node_size': 1000,'edge_color': 'blue'}
 nx.draw_circular(G, **options, with_labels=True)
 
 plt.savefig("GRAPH_1.png")
-plt.plot()
 plt.show()
 
+#creating adjaceny matrix adjacency_G for directed graph G
+adjacency_G = nx.to_numpy_matrix(G)
+file = open("adjacency_G.txt", 'w+')
+np.savetxt("adjacency.txt", adjacency_G, fmt='%d')
