@@ -26,5 +26,6 @@ plt.show()
 
 #creating adjaceny matrix adjacency_G for directed graph G
 adjacency_G = nx.to_numpy_matrix(G)
+adjacency_G = adjacency_G.astype(int)
 file = open("adjacency_G.txt", 'w+')
 np.savetxt("adjacency.txt", adjacency_G, fmt='%d')
