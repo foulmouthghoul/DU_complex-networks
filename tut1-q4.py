@@ -8,7 +8,7 @@ import networkx as nx
 ADJ = np.loadtxt("ADJ.txt", dtype='i')
 
 #creating directed graph
-Gdi = nx.from_numpy_matrix(ADJ,create_using=nx.DiGraph())
+Gdi = nx.from_numpy_matrix(ADJ,create_using = nx.DiGraph())
 
 #creating undirected graph from directed graph Gdi
 Gun = nx.to_undirected(Gdi)
