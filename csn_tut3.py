@@ -70,7 +70,7 @@ for n in G.nodes():
 import collections
 
 degCnt = collections.Counter(sorted([d for n, d in G.degree()], reverse=True))
-print(degCnt)
+#print(degCnt)
 k, nk = zip(*degCnt.items())
 prd = np.divide(nk, len(G.nodes()))
 
@@ -82,7 +82,7 @@ for n in range(0,len(degCnt)):
 plt.title("degree distribution p(k)-k plot")
 plt.xlabel("k")
 plt.ylabel("p(k)")
-plt.plot(prd, nk,c='r',marker='^')
+plt.plot(k, prd,c='r',marker='^')
 plt.savefig("degdist_pritamchakraborty_19079762010.png")
 plt.show()
 
@@ -102,43 +102,42 @@ print("average shortest path length", nx.average_shortest_path_length(G))
 
 #8. How many distinct walks of length two exist in the graph (excluding closed walks)?
 A_sq = np.dot(ADJ,ADJ)
-n_wk2 = 0
+'''n_wk2 = 0
 for i in range(G.order()):
     for j in range(G.order()):
         if (i != j):
             n_wk2 = n_wk2 + A_sq[i][j]
-
-print("the number of walks of length 2 excluding closed walks", n_wk2)
+'''
+print("the number of walks of length 2 excluding closed walks", (np.sum(A_sq)-np.trace(A_sq)))
 
 
 #9. How many distinct closed walks of length three exist in the graph from node 3 to node 5?
 A_cb = np.dot(ADJ,A_sq)
-print("the number of distinct walks of length 3 from node labelled 3 to node labelled 5",A_sq[2][4])
+print("the number of distinct walks of length 3 from node labelled 3 to node labelled 5",A_cb[3][5])
 
 
 '''10. If your graph is directed, identify the size and the nodes belonging to the
 largest strongly connected component of the graph; else, if your graph is
 undirected, find the size and the nodes belonging to the largest connected
 component.'''
-conn_cmp = list(nx.connected_components(G))
-
-print("largest",max(max(conn_cmp)))
-
-print("node", nx.number_connected_components(G))
+lar_cc = max(nx.connected_components(G), key=len)
+print("The largest connected component of undirected graph:", lar_cc)
+print("size",len(lar_cc))
 
 
 #11. Which node has the highest “betweenness centrality” and what is it?
 n=G.order()
-bet_cent=nx.betweenness_centrality(G,normalized=False)
+bet_cent=nx.betweenness_centrality(G,normalized=False) #gives a dictionary a nodes and between centrality measure
 #print(bet_cent)
-nn = [ ]
-blist = [ ]
+nn = [ ]   #creates a null list to store node values
+blist = [ ]   #null list to store centrality value
 #print('normalized according to class :\n')
 for key, value in bet_cent.items():
     #print(key, '->',(1/n**2)*value)
-    blist.append((1/n**2)*value)
+    blist.append((1/n**2)*value)  #renormalisation is applied
     nn.append(key)
 
+#print(len(bet_cent),len(nn))
 for i in range(len(nn)):
     if (blist[i] == max(blist)):
         print("node having the maximum centrality",nn[i])
@@ -147,7 +146,7 @@ for i in range(len(nn)):
 '''12. In the undirected/associated undirected graph, what is the average
 clustering coefficient of the graph? (if a node has a degree less than 2, take
 its clustering coefficient to be zero)'''
-print("average clustering coefficient", nx.average_clustering(G,count_zeros=False))
+print("average clustering coefficient", nx.average_clustering(G,count_zeros=True)) #here we have included nodes with zero clustering coefficient
 
 
 '''13. In the case of undirected/associated undirected graph, does there exist a
@@ -169,17 +168,34 @@ print("Longest Cycle is {} with length {}.".format(answer,longest_cycle_len))
 
 '''14. In the undirected/Associated undirected graph, how many nodes are at a
 distance two from node 5 (excluding the node 5 itself)?'''
-node_distnc = nx.single_source_shortest_path_length(G,5,cutoff=2)
+node_distnc = nx.single_source_shortest_path_length(G,5,cutoff=2) #generates a dictionery of nodes & distance having distance <= 2
 
 count = 0
 for node in node_distnc:
-    print(f"{node}: {node_distnc[node]}")
+    #print(f"{node}: {node_distnc[node]}")
     if (node_distnc[node]==2):
         count = count + 1
 
 print("number of nodes",count)
 
+'''n2 = 0
+for i in range(len(G.nodes())):
+    d = nx.shortest_path(G,5,i)
+    if ((len(d)-1)==2 and (i!=5)):
+        n2 = n2 +1
+
+print("no fo nodes",n2 )'''
 
 '''15. How would you characterize your graph? ‘Erdos-Renyi’, ‘small-world ’,
 ‘scale-free’ or ‘regular’? Give reasons. Is the categorization clear or could it
 fall into multiple categories?'''
+
+'''
+    based on the values of:
+    avg clustering coefficient ~ 0.3347
+    diameter ~6
+    it is an Erdos Reiyni
+    
+    however looking at the degree distribution we can deduce that for higher degree values
+    there isnt much nodes , so its a small-world
+'''
